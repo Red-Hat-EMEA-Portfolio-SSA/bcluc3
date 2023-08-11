@@ -1,1 +1,78 @@
-WIP
+---
+- name: Playbook to update ESXi host
+  hosts: localhost
+  become: false
+  gather_facts: false
+
+  vars:
+    my_vmware_datacenter_name: bcl
+    my_vmware_cluster_name: bcl-cluster
+    my_esxi_hostname: "10.6.54.202"
+
+  tasks:
+
+    - name: Enable DRS
+      community.vmware.vmware_cluster_drs:
+        hostname: "{{ lookup('env', 'VMWARE_HOST') }}"
+        username: "{{ lookup('env', 'VMWARE_USER') }}"
+        password: "{{ lookup('env', 'VMWARE_PASSWORD') }}"
+        validate_certs: false
+        datacenter_name: "{{ my_vmware_datacenter_name }}"
+        cluster_name: "{{ my_vmware_cluster_name }}"
+        drs_default_vm_behavior: fullyAutomated
+        enable: true
+      delegate_to: localhost
+
+    - name: Enter VSAN-Compliant Maintenance Mode for the defined host {{ my_esxi_hostname }}
+      community.vmware.vmware_maintenancemode:
+        hostname: "{{ lookup('env', 'VMWARE_HOST') }}"
+        username: "{{ lookup('env', 'VMWARE_USER') }}"
+        password: "{{ lookup('env', 'VMWARE_PASSWORD') }}"
+        validate_certs: false
+        esxi_hostname: "{{ my_esxi_hostname }}"
+        vsan: ensureObjectAccessibility
+        evacuate: true
+        timeout: 3600
+        state: present
+      delegate_to: localhost
+
+    #- name: ESXi Install Update 
+    #  shell: 
+    #    "esxcli software profile update -d /vmfs/volumes/XXXXXXXXXXX/ESXi670-202102001.zip -p ESXi-6.7.0-20210204001-standard" 
+    #  register: vib 
+    #  
+    #- debug:
+    #   var: vib
+
+    - name: ESXi reboot 
+      vmware_host_powerstate: 
+        hostname: "{{ lookup('env', 'VMWARE_HOST') }}"
+        username: "{{ lookup('env', 'VMWARE_USER') }}"
+        password: "{{ lookup('env', 'VMWARE_PASSWORD') }}"
+        validate_certs: false
+        esxi_hostname: "{{ my_esxi_hostname }}"
+        timeout: 3600
+        state: reboot-host
+      delegate_to: localhost
+    
+    - name: ESXi wait for the reboot to complete
+      wait_for:
+        host: "{{ my_esxi_hostname }}"
+        port: 443
+        delay: 360
+        state: started
+        timeout: 3600
+      delegate_to: localhost
+
+    - name: ESXi exit maintenance 
+      vmware_maintenancemode:
+        hostname: "{{ lookup('env', 'VMWARE_HOST') }}"
+        username: "{{ lookup('env', 'VMWARE_USER') }}"
+        password: "{{ lookup('env', 'VMWARE_PASSWORD') }}"
+        validate_certs: false
+        esxi_hostname: "{{ my_esxi_hostname }}"
+        vsan: ensureObjectAccessibility
+        evacuate: true
+        timeout: 3600
+        state: absent
+      delegate_to: localhost

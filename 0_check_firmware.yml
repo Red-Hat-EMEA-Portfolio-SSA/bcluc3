@@ -9,7 +9,6 @@
         msg: "You need to define ov_hardware for each host which should be deployed via this script"
       when: ov_hardware is undefined 
 
-
     - name: Gather firmware information about a Server Hardware
       delegate_to: localhost
       register: registered_firmware

@@ -8,6 +8,12 @@ ansible-navigator:
     pull:
       policy: always
     image: quay.io/mschreie/bcl-ov:10
+    environment-variables:
+      pass:
+        - VMWARE_HOST 
+        - VMWARE_USER
+        - VMWARE_PASSWORD
+        - VMWARE_VALIDATE_CERTS
   playbook-artifact:
     enable: false
   mode: stdout
