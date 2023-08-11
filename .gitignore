@@ -2,3 +2,4 @@ secrets.yml
 *.log
 .vscode
 vmware-secrets
+notes.txt
