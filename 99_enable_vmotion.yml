@@ -1,0 +1,47 @@
+---
+- name: Playbook configure vCenter
+  hosts: localhost
+  become: false
+  gather_facts: false
+
+  vars:
+    my_vmware_datacenter_name: bcl
+    my_vmware_cluster_name: bcl-cluster
+    my_vmware_vswitch: DSwitch-test
+    my_vmware_portgroup: DPortGroup-test
+    my_esxi_hosts:
+      - "10.6.54.201"
+      #- "10.6.54.202"
+      #- "10.6.54.203"
+  tasks:
+
+    - name: Enable DRS
+      community.vmware.vmware_cluster_drs:
+        hostname: "{{ lookup('env', 'VMWARE_HOST') }}"
+        username: "{{ lookup('env', 'VMWARE_USER') }}"
+        password: "{{ lookup('env', 'VMWARE_PASSWORD') }}"
+        validate_certs: false
+        datacenter_name: "{{ my_vmware_datacenter_name }}"
+        cluster_name: "{{ my_vmware_cluster_name }}"
+        drs_default_vm_behavior: fullyAutomated
+        enable: true
+      delegate_to: localhost
+
+    - name: Enable vMotion on all hosts port groups
+      loop: "{{ my_esxi_hosts }}"
+      community.vmware.vmware_vmkernel:
+        hostname: "{{ lookup('env', 'VMWARE_HOST') }}"
+        username: "{{ lookup('env', 'VMWARE_USER') }}"
+        password: "{{ lookup('env', 'VMWARE_PASSWORD') }}"
+        validate_certs: false
+        esxi_hostname: "{{ item }}"
+        vswitch_name: "{{ my_vmware_vswitch }}"
+        portgroup_name: "{{ my_vmware_portgroup }}"
+        state: present
+        device: vmk0
+        enable_vmotion: true
+        network:
+          ip_address: "{{ item }}"
+          type: static
+          subnet_mask: 255.255.255.0
+      delegate_to: localhost
