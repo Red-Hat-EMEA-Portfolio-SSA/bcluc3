@@ -1,5 +1,5 @@
 ---
-- name: Apply security updates
+- name: Apply security updates to guests vm's
   hosts: vmware_guests
   become: true
 
