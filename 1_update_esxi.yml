@@ -36,16 +36,16 @@
         state: present
       delegate_to: localhost
 
-    #- name: ESXi Install Update 
-    #  shell: 
-    #    "esxcli software profile update -d /vmfs/volumes/XXXXXXXXXXX/ESXi670-202102001.zip -p ESXi-6.7.0-20210204001-standard" 
-    #  register: vib 
-    #  
-    #- debug:
-    #   var: vib
+#    - name: ESXi Install Update
+#      shell:
+#        "esxcli software profile update -d /vmfs/volumes/XXXXXXXXXXX/ESXi670-202102001.zip -p ESXi-6.7.0-20210204001-standard"
+#      register: vib
+#
+#    - debug:
+#       var: vib
 
-    - name: ESXi reboot 
-      vmware_host_powerstate: 
+    - name: ESXi reboot
+      community.vmware.vmware_host_powerstate:
         hostname: "{{ lookup('env', 'VMWARE_HOST') }}"
         username: "{{ lookup('env', 'VMWARE_USER') }}"
         password: "{{ lookup('env', 'VMWARE_PASSWORD') }}"
@@ -54,9 +54,9 @@
         timeout: 3600
         state: reboot-host
       delegate_to: localhost
-    
+
     - name: ESXi wait for the reboot to complete
-      wait_for:
+      ansible.builtin.wait_for:
         host: "{{ my_esxi_hostname }}"
         port: 443
         delay: 360
@@ -64,8 +64,8 @@
         timeout: 3600
       delegate_to: localhost
 
-    - name: ESXi exit maintenance 
-      vmware_maintenancemode:
+    - name: ESXi exit maintenance
+      community.vmware.vmware_maintenancemode:
         hostname: "{{ lookup('env', 'VMWARE_HOST') }}"
         username: "{{ lookup('env', 'VMWARE_USER') }}"
         password: "{{ lookup('env', 'VMWARE_PASSWORD') }}"
