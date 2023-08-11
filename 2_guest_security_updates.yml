@@ -1,0 +1,23 @@
+---
+- name: Apply security updates
+  hosts: vmware_guests
+  become: true
+
+  tasks:
+    - name: Install updates that have been marked security related
+      when:
+        - ansible_facts['system'] == "Linux"
+        - ansible_facts['os_family'] == "RedHat"
+      ansible.builtin.dnf:
+        name: '*'
+        security: true
+        state: present
+
+    - name: Install all security updates with automatic reboots
+      when:
+        - ansible_facts['system'] == "Win32NT"
+        - ansible_facts['os_family'] == "Windows"
+      ansible.windows.win_updates:
+        category_names:
+          - SecurityUpdates
+        reboot: true

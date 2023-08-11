@@ -21,10 +21,6 @@
        name : "{{ ov_hardware }}"
        options:
            - firmware
-
-    #- name: Print Server Hardware registered_firmware
-    #  debug:
-    #    var: registered_firmware.ansible_facts.server_hardware_firmware.components
       
     - name: Print Server Hardware firmware and components
       loop: "{{ registered_firmware.ansible_facts.server_hardware_firmware.components }}"
