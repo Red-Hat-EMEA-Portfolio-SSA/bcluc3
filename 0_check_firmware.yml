@@ -1,0 +1,33 @@
+---
+- hosts: target_hosts
+  gather_facts: no
+
+  vars:
+
+  tasks:
+    - fail:
+        msg: "You need to define ov_hardware for each host which should be deployed via this script"
+      when: ov_hardware is undefined 
+
+
+    - name: Gather firmware information about a Server Hardware
+      delegate_to: localhost
+      register: registered_firmware
+      hpe.oneview.oneview_server_hardware_facts:
+       hostname: "{{ hostvars.oneview_host.ansible_host }}"
+       username: "{{ oneview_username }}"
+       password: "{{ oneview_password }}"
+       api_version: "{{ oneview_apiversion }}"
+       name : "{{ ov_hardware }}"
+       options:
+           - firmware
+
+    #- name: Print Server Hardware registered_firmware
+    #  debug:
+    #    var: registered_firmware.ansible_facts.server_hardware_firmware.components
+      
+    - name: Print Server Hardware firmware and components
+      loop: "{{ registered_firmware.ansible_facts.server_hardware_firmware.components }}"
+      debug:
+        msg: |
+          "Component Name: {{ item.componentName }} | Firmware version: {{ item.componentVersion }}"
