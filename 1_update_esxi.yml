@@ -1,6 +1,6 @@
 ---
 - name: Playbook to update ESXi host
-  hosts: localhost
+  hosts: esx2
   become: false
   gather_facts: false
 
@@ -8,6 +8,7 @@
     my_vmware_datacenter_name: bcl
     my_vmware_cluster_name: bcl-cluster
     my_esxi_hostname: "10.6.54.202"
+    my_esxi_package: "ESXi-7.0U2a-17867351-standard"
 
   tasks:
 
@@ -36,13 +37,18 @@
         state: present
       delegate_to: localhost
 
-#    - name: ESXi Install Update
-#      shell:
-#        "esxcli software profile update -d /vmfs/volumes/XXXXXXXXXXX/ESXi670-202102001.zip -p ESXi-6.7.0-20210204001-standard"
-#      register: vib
-#
-#    - debug:
-#       var: vib
+    - name: ESXi enable http traffic
+      ansible.builtin.shell:
+        "esxcli network firewall ruleset set -e true -r httpClient"
+
+    - name: ESXi Install Update
+      ansible.builtin.shell:
+        "esxcli software profile update -p {{ my_esxi_package }} -d https://hostupdate.vmware.com/software/VUM/PRODUCTION/main/vmw-depot-index.xml" #"esxcli software profile update -d /vmfs/volumes/XXXXXXXXXXX/ESXi670-202102001.zip -p ESXi-6.7.0-20210204001-standard"
+      register: vib
+
+    - name: Print output of update command
+      ansible.builtin.debug:
+        var: vib
 
     - name: ESXi reboot
       community.vmware.vmware_host_powerstate:
