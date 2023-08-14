@@ -12,18 +12,6 @@
 
   tasks:
 
-    - name: Enable DRS
-      community.vmware.vmware_cluster_drs:
-        hostname: "{{ lookup('env', 'VMWARE_HOST') }}"
-        username: "{{ lookup('env', 'VMWARE_USER') }}"
-        password: "{{ lookup('env', 'VMWARE_PASSWORD') }}"
-        validate_certs: false
-        datacenter_name: "{{ my_vmware_datacenter_name }}"
-        cluster_name: "{{ my_vmware_cluster_name }}"
-        drs_default_vm_behavior: fullyAutomated
-        enable: true
-      delegate_to: localhost
-
     - name: Enter VSAN-Compliant Maintenance Mode for the defined host {{ my_esxi_hostname }}
       community.vmware.vmware_maintenancemode:
         hostname: "{{ lookup('env', 'VMWARE_HOST') }}"
