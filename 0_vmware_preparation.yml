@@ -36,17 +36,17 @@
           subnet_mask: 255.255.255.0
       delegate_to: localhost
 
-    #- name: Enable vSAN and claim storage automatically
-    #  community.vmware.vmware_cluster_vsan:
-    #    hostname: "{{ lookup('env', 'VMWARE_HOST') }}"
-    #    username: "{{ lookup('env', 'VMWARE_USER') }}"
-    #    password: "{{ lookup('env', 'VMWARE_PASSWORD') }}"
-    #    validate_certs: false
-    #    datacenter_name: "{{ my_vmware_datacenter_name }}"
-    #    cluster_name: "{{ my_vmware_cluster_name }}"
-    #    enable: true
-    #    vsan_auto_claim_storage: false
-    #  delegate_to: localhost
+    - name: Enable vSAN and claim storage automatically
+      community.vmware.vmware_cluster_vsan:
+        hostname: "{{ lookup('env', 'VMWARE_HOST') }}"
+        username: "{{ lookup('env', 'VMWARE_USER') }}"
+        password: "{{ lookup('env', 'VMWARE_PASSWORD') }}"
+        validate_certs: false
+        datacenter_name: "{{ my_vmware_datacenter_name }}"
+        cluster_name: "{{ my_vmware_cluster_name }}"
+        enable: true
+        vsan_auto_claim_storage: false
+      delegate_to: localhost
 
     - name: Enable DRS
       community.vmware.vmware_cluster_drs:
