@@ -7,18 +7,17 @@
   vars:
     my_vmware_datacenter_name: bcl
     my_vmware_cluster_name: bcl-cluster
-    my_esxi_hostname: "10.6.54.202"
     my_esxi_package: "ESXi-7.0U2a-17867351-standard"
 
   tasks:
 
-    - name: Enter VSAN-Compliant Maintenance Mode for the defined host {{ my_esxi_hostname }}
+    - name: Enter VSAN-Compliant Maintenance Mode for the defined host {{ ansible_host }}
       community.vmware.vmware_maintenancemode:
         hostname: "{{ lookup('env', 'VMWARE_HOST') }}"
         username: "{{ lookup('env', 'VMWARE_USER') }}"
         password: "{{ lookup('env', 'VMWARE_PASSWORD') }}"
         validate_certs: false
-        esxi_hostname: "{{ my_esxi_hostname }}"
+        esxi_hostname: "{{ ansible_host }}"
         vsan: ensureObjectAccessibility
         evacuate: true
         timeout: 3600
@@ -31,12 +30,13 @@
 
     - name: ESXi Install Update
       ansible.builtin.shell:
-        "esxcli software profile update -p {{ my_esxi_package }} -d https://hostupdate.vmware.com/software/VUM/PRODUCTION/main/vmw-depot-index.xml" #"esxcli software profile update -d /vmfs/volumes/XXXXXXXXXXX/ESXi670-202102001.zip -p ESXi-6.7.0-20210204001-standard"
+        "esxcli software profile update -p {{ my_esxi_package }} -d https://hostupdate.vmware.com/software/VUM/PRODUCTION/main/vmw-depot-index.xml"
+        # If offline: "esxcli software profile update -d /vmfs/volumes/XXXXXXXXXXX/ESXi670-202102001.zip -p ESXi-6.7.0-20210204001-standard"
       register: vib
 
     - name: Print output of update command
       ansible.builtin.debug:
-        var: vib
+        var: vib.stdout_lines
 
     - name: ESXi reboot
       community.vmware.vmware_host_powerstate:
@@ -44,14 +44,14 @@
         username: "{{ lookup('env', 'VMWARE_USER') }}"
         password: "{{ lookup('env', 'VMWARE_PASSWORD') }}"
         validate_certs: false
-        esxi_hostname: "{{ my_esxi_hostname }}"
+        esxi_hostname: "{{ ansible_host }}"
         timeout: 3600
         state: reboot-host
       delegate_to: localhost
 
     - name: ESXi wait for the reboot to complete
       ansible.builtin.wait_for:
-        host: "{{ my_esxi_hostname }}"
+        host: "{{ ansible_host }}"
         port: 443
         delay: 360
         state: started
@@ -64,7 +64,7 @@
         username: "{{ lookup('env', 'VMWARE_USER') }}"
         password: "{{ lookup('env', 'VMWARE_PASSWORD') }}"
         validate_certs: false
-        esxi_hostname: "{{ my_esxi_hostname }}"
+        esxi_hostname: "{{ ansible_host }}"
         vsan: ensureObjectAccessibility
         evacuate: true
         timeout: 3600
