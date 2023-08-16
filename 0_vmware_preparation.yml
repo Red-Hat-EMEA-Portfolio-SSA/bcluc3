@@ -45,7 +45,7 @@
         datacenter_name: "{{ my_vmware_datacenter_name }}"
         cluster_name: "{{ my_vmware_cluster_name }}"
         enable: true
-        vsan_auto_claim_storage: false
+        vsan_auto_claim_storage: true
       delegate_to: localhost
 
     - name: Enable DRS
