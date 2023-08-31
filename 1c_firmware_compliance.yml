@@ -1,0 +1,96 @@
+---
+- name: View firmware compliance data from OneView
+  hosts: localhost
+  gather_facts: false
+
+  vars:
+    server_name: "rh-bctl-2-gen9.hpintelco.org"
+    spp_name: "SPP Gen9.0"
+
+  tasks:
+
+    - name: Get Session Key
+      register: output
+      delegate_to: localhost
+      ansible.builtin.uri:
+        url: "https://{{ hostvars.oneview_host.ansible_host }}/rest/login-sessions"
+        method: POST
+        validate_certs: false
+        force_basic_auth: true
+        body_format: json
+        body:
+          userName: "{{ oneview_username }}"
+          password: "{{ oneview_password }}"
+        headers:
+          Content-type: "application/json"
+
+    - name: OneView Key
+      ansible.builtin.set_fact:
+        oneview_key: "{{ output.json.sessionID }}"
+
+    - name: Get all server hardware details
+      delegate_to: localhost
+      register: output
+      ansible.builtin.uri:
+        url: "https://{{ hostvars.oneview_host.ansible_host }}/rest/server-hardware"
+        method: GET
+        validate_certs: false
+        body_format: json
+        headers:
+          X-Api-Version: "{{ oneview_apiversion }}"
+          Auth: "{{ oneview_key }}"
+
+    - name: Set fact for UUID of server
+      ansible.builtin.set_fact:
+        fact_server_uuid: "{{ (output.json.members | flatten | selectattr( 'name' , 'equalto' , server_name ) | first).uuid }}"
+
+    - name: Get all server firmware details
+      register: output
+      delegate_to: localhost
+      ansible.builtin.uri:
+        url: "https://{{ hostvars.oneview_host.ansible_host }}/rest/firmware-drivers"
+        method: GET
+        validate_certs: false
+        body_format: json
+        headers:
+          X-Api-Version: "{{ oneview_apiversion }}"
+          Auth: "{{ oneview_key }}"
+
+    - name: Set fact for SPP UUID
+      ansible.builtin.set_fact:
+        fact_spp_uuid: "{{ (output.json.members | flatten |  selectattr( 'baselineShortName' , 'equalto' , spp_name )) | map(attribute='uuid') | first }}"
+
+    - name: Stat the list of all SPP versions loaded into OneView
+      delegate_to: localhost
+      ansible.builtin.set_stats:
+        data:
+          wf_spp_versions: "{{ output.json.members | map(attribute='baselineShortName') | list }}" # | join('\n') }}"
+
+    - name: Get server compliance
+      register: output
+      delegate_to: localhost
+      ansible.builtin.uri:
+        url: "https://{{ hostvars.oneview_host.ansible_host }}/rest/server-hardware/firmware-compliance"
+        method: POST
+        validate_certs: false
+        body_format: json
+        body:
+          firmwareBaselineId: "{{ fact_spp_uuid }}"
+          serverUUID: "{{ fact_server_uuid }}"
+        headers:
+          X-Api-Version: "{{ oneview_apiversion }}"
+          Auth: "{{ oneview_key }}"
+
+    - name: Print update state
+      ansible.builtin.debug:
+        msg: "{{ output.json.serverFirmwareUpdateRequired }}"
+
+    - name: Check if server requires update
+      ansible.builtin.set_fact:
+        update_required: "{{ output.json.serverFirmwareUpdateRequired }}"
+
+    - name: Fail if server requires update
+      delegate_to: localhost
+      when: update_required is true
+      ansible.builtin.fail:
+        msg: "Server requires update"

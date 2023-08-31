@@ -1,0 +1,34 @@
+  name: "{{ inventory_hostname }}"
+  serverHardwareName: "{{ inventory_hostname }}.hpintelco.org"
+  serverHardwareTypeName: DL380 Gen9 #"{{ server_hardware_type_name }}"
+  managementProcessor: 
+    manageMp: false
+  bios:
+    manageBios: false
+  boot:
+    order:
+      - CD
+      - USB
+      - HardDisk
+      - PXE
+    manageBoot: false
+  bootMode:
+    manageMode: true
+    mode: "BIOS"
+    pxeBootPolicy: null
+    secureBoot: "Unmanaged"
+  localStorage:
+    controllers: []
+    reapplyState: NotApplying
+    sasLogicalJBODs: []
+  firmware:
+{% if firmware is true %}
+    firmwareActivationType: NotScheduled
+    firmwareBaselineUri: "/rest/firmware-drivers/P52574_001_spp-Gen9_0-Gen9SPPGen90_19"
+    firmwareInstallType: FirmwareOnly
+    forceInstallFirmware: false
+    manageFirmware: true
+{% else %}
+    manageFirmware: false
+{% endif %}
+  osDeploymentSettings: null
