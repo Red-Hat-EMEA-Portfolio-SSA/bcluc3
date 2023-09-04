@@ -3,6 +3,9 @@
   hosts: oneview_servers
   gather_facts: false
 
+  vars:
+    firmware: false
+
   tasks:
 
     - name: Create a server profile
