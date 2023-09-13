@@ -20,6 +20,16 @@
        name : "{{ ov_hardware }}"
        options:
            - firmware
+
+    - name: Debug - understand content of server_hardwares
+      debug:
+        var: server_hardwares
+      when: debug | default(false)
+      
+    - name: Debug - understand content of registered_firmware
+      debug:
+        var: registered_firmware
+      when: debug | default(false)
       
     - name: Print Server Hardware firmware and components
       loop: "{{ registered_firmware.ansible_facts.server_hardware_firmware.components }}"
