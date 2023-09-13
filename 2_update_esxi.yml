@@ -1,6 +1,6 @@
 ---
 - name: Playbook to update ESXi host
-  hosts: esx2
+  hosts: esx1
   become: false
   gather_facts: false
 
