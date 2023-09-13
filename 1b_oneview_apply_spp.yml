@@ -4,9 +4,17 @@
   gather_facts: false
 
   vars:
-    firmware: false
+    firmware: true
 
   tasks:
+
+    - name: debug Firmware
+      ansible.builtin.debug:
+        var: firmware
+
+    - name: debug server profle
+      ansible.builtin.debug:
+        msg: "{{ lookup('ansible.builtin.template', 'server_profile_template.j2') | from_yaml }}"
 
     - name: Create a server profile
       delegate_to: localhost
