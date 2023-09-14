@@ -1,6 +1,7 @@
 ---
 - name: View firmware compliance data from OneView
   hosts: target_hosts
+  strategy: linear
   gather_facts: false
 
   vars:
@@ -9,7 +10,7 @@
 
   tasks:
 
-    - name: Get Session Key
+    - name: Get Session Key # noqa: run-once[task]
       register: output
       delegate_to: localhost
       delegate_facts: true
@@ -25,9 +26,8 @@
           password: "{{ oneview_password }}"
         headers:
           Content-type: "application/json"
-        
 
-    - name: OneView Key
+    - name: OneView Key # noqa: run-once[task]
       delegate_to: localhost
       delegate_facts: true
       run_once: true
@@ -48,7 +48,7 @@
 
     - name: Set fact for UUID of server
       ansible.builtin.set_fact:
-        fact_server_uuid: "{{ (output.json.members | flatten | selectattr('name' , 'equalto' , ov_hardware) | first).uuid }}"
+        fact_server_uuid: "{{ (output.json.members | flatten | selectattr('name', 'equalto', ov_hardware) | first).uuid }}"
 
     - name: Get all server firmware details
       register: output
@@ -64,7 +64,7 @@
 
     - name: Set fact for SPP UUID
       ansible.builtin.set_fact:
-        fact_spp_uuid: "{{ (output.json.members | flatten |  selectattr( 'baselineShortName' , 'equalto' , spp_name )) | map(attribute='uuid') | first }}"
+        fact_spp_uuid: "{{ (output.json.members | flatten |  selectattr('baselineShortName', 'equalto', spp_name )) | map(attribute='uuid') | first }}"
 
     - name: Stat the list of all SPP versions loaded into OneView
       delegate_to: localhost
