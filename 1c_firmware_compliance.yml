@@ -1,6 +1,6 @@
 ---
 - name: View firmware compliance data from OneView
-  hosts: target_hosts
+  hosts: uc3_targets
   strategy: linear
   gather_facts: false
 
