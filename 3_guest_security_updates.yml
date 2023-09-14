@@ -1,6 +1,6 @@
 ---
 - name: Apply security updates to guests vm's
-  hosts: vmware_guests
+  hosts: uc3_vmware_guests
   become: true
 
   tasks:

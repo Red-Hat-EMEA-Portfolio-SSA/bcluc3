@@ -1,20 +1,16 @@
 ---
 - name: Add firmware to Server Profiles in OneView
-  hosts: oneview_servers
+  hosts: uc3_targets
   gather_facts: false
 
   vars:
     firmware: true
 
   tasks:
-
-    - name: debug Firmware
-      ansible.builtin.debug:
-        var: firmware
-
     - name: debug server profle
       ansible.builtin.debug:
         msg: "{{ lookup('ansible.builtin.template', 'server_profile_template.j2') | from_yaml }}"
+      when: debug | default('false') | bool
 
     - name: Create a server profile
       delegate_to: localhost
