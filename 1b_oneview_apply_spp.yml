@@ -29,3 +29,7 @@
           "{{ lookup('ansible.builtin.template', 'server_profile_template.j2') | from_yaml }}"
         params:
           force: true
+
+    - name: debug message to reboot the server
+      ansible.builtin.debug:
+        msg: "Please run update_esxi or reboot the server manually to apply all firmware updates"
