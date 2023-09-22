@@ -3,6 +3,7 @@
   hosts: uc3_targets
   become: false
   gather_facts: false
+  serial: 1
 
   vars:
     my_vmware_datacenter_name: bcl
