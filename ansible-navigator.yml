@@ -6,7 +6,7 @@ ansible-navigator:
         - ./inventory/hosts
   execution-environment:
     pull:
-      policy: missing
+      policy: always
     image: quay.io/mschreie/bcl-ov:18
     environment-variables:
       pass:
