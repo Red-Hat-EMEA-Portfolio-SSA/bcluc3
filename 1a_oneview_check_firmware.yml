@@ -5,12 +5,12 @@
   vars:
 
   tasks:
-    # - fail:
-    #     msg: "You need to define ov_hardware for each host which should be deployed via this script"
-    #   when: ov_hardware is undefined 
-    - name: define ov_hardware according to inventory name
-      ansible.builtin.set_fact:
-        ov_hardware: "{{ inventory_hostname }}.hpintelco.org"
+    - fail:
+        msg: "You need to define ov_hardware for each host which should be deployed via this script"
+      when: ov_hardware is undefined 
+    #- name: define ov_hardware according to inventory name
+    #  ansible.builtin.set_fact:
+    #    ov_hardware: "{{ inventory_hostname }}.hpintelco.org"
 
     - name: Gather firmware information about a Server Hardware
       delegate_to: localhost

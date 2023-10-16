@@ -7,10 +7,10 @@
     firmware: true
 
   tasks:
-    - name: define ov_hardware according to inventory name
-      ansible.builtin.set_fact:
-        ov_hostname: "{{ inventory_hostname }}"
-        ov_hardware: "{{ inventory_hostname }}.hpintelco.org"
+    #- name: define ov_hardware according to inventory name
+    #  ansible.builtin.set_fact:
+    #    ov_hostname: "{{ inventory_hostname }}"
+    #    ov_hardware: "{{ inventory_hostname }}.hpintelco.org"
 
     - name: debug server profle
       ansible.builtin.debug:
