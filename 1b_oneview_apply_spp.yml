@@ -7,6 +7,9 @@
     firmware: true
 
   tasks:
+   - ansible.builtin.set_fact:
+        ov_hardware: "{{ inventory_hostname }}.hpintelco.org"
+
     - name: debug server profle
       ansible.builtin.debug:
         msg: "{{ lookup('ansible.builtin.template', 'server_profile_template.j2') | from_yaml }}"
