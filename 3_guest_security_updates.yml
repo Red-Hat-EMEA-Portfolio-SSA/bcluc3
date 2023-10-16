@@ -1,7 +1,6 @@
 ---
 - name: Apply security updates to guests vm's
   hosts: uc3_guest_targets
-  become: true
 
   tasks:
     - name: Install updates that have been marked security related
@@ -12,6 +11,7 @@
         name: '*'
         security: true
         state: latest
+      become: true
 
     - name: Install all security updates with automatic reboots
       when:
