@@ -9,7 +9,8 @@
     spp_name: "SPP Gen9.0"
 
   tasks:
-    - ansible.builtin.set_fact:
+    - name: define ov_hardware according to inventory name
+      ansible.builtin.set_fact:
         ov_hardware: "{{ inventory_hostname }}.hpintelco.org"
 
     - name: Get Session Key # noqa: run-once[task]
