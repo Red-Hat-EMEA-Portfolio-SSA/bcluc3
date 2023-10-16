@@ -3,8 +3,8 @@ bastion_host ansible_host=10.6.55.4
 oneview_host ansible_host=10.6.55.9
 
 [uc3_targets]
-esx1 ansible_host="10.6.54.201" ov_hardware=rh-bctl-1-gen9.hpintelco.org ov_hostname=rh-bctl-1-gen9 server_hardware_type_name="DL380 Gen9"
-esx2 ansible_host="10.6.54.202" ov_hardware=rh-bctl-2-gen9.hpintelco.org ov_hostname=rh-bctl-2-gen9 server_hardware_type_name="DL380 Gen9"
-esx3 ansible_host="10.6.54.203" ov_hardware=rh-bctl-3-gen9.hpintelco.org ov_hostname=rh-bctl-3-gen9 server_hardware_type_name="DL380 Gen9"
-# esx5 ansible_host="10.6.54.205" ov_hardware=rh-bctl-5-gen10.hpintelco.org ov_hostname=rh-bctl-5-gen10 server_hardware_type_name="DL380 Gen10"
+#esx1 ansible_host="10.6.54.201" ov_hardware=rh-bctl-1-gen9.hpintelco.org ov_hostname=rh-bctl-1-gen9 server_hardware_type_name="DL380 Gen9"
+#esx2 ansible_host="10.6.54.202" ov_hardware=rh-bctl-2-gen9.hpintelco.org ov_hostname=rh-bctl-2-gen9 server_hardware_type_name="DL380 Gen9"
+#esx3 ansible_host="10.6.54.203" ov_hardware=rh-bctl-3-gen9.hpintelco.org ov_hostname=rh-bctl-3-gen9 server_hardware_type_name="DL380 Gen9"
+esx5 ansible_host="10.6.54.205" ov_hardware=rh-bctl-5-gen10.hpintelco.org ov_hostname=rh-bctl-5-gen10 server_hardware_type_name="DL380 Gen10"
 
