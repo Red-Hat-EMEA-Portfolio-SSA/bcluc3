@@ -7,7 +7,7 @@ ansible-navigator:
   execution-environment:
     pull:
       policy: always
-    image: quay.io/mschreie/bcl-ov:18
+    image: quay.io/mschreie/bcl-ov:latest
     environment-variables:
       pass:
         - VMWARE_HOST 
