@@ -1,0 +1,5 @@
+my_vmware_datacenter_name: bcl
+my_vmware_cluster_name: bcl-cluster
+#my_esxi_package: "ESXi-7.0U2a-17867351-standard"
+my_esxi_package: "ESXi-7.0U3n-21930508-standard"
+

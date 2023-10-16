@@ -45,5 +45,5 @@ ansible_become_pass: "my-sudo-password"
 In our case we've called that file secrets.yml, therefore our command to run the playbooks would be:
 
 ```
-ansible-navigator run 2_update_esxi.yml -e @secrets.yml
+ansible-navigator run 2_update_esxi.yml -e @secrets.yml -e @vars.yml
 ```
