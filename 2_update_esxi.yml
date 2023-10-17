@@ -64,5 +64,4 @@
         evacuate: true
         timeout: 3600
         state: absent
-        validate_certs: false
       delegate_to: localhost
