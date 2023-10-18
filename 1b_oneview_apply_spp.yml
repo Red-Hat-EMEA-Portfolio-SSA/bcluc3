@@ -131,13 +131,13 @@
   - name: Wait for ESXi to be ready
     ansible.builtin.wait_for:
       port: "{{ inner_item }}"
-      host: "{{ esxi_hostname }}"
+      host: "{{ inventory_hostname }}"
       # all values in seconds
       delay: 5            # wait 5 sec before 1st try
       connect_timeout: 10   # wait 10 sec with each try
       sleep: 20             # wait 20 sec before trying agin
       timeout: 1500         # wait 30 min alltogether before failing
-      msg: "ESXi {{ esxi_hostname }} not ready yet"
+      msg: "ESXi {{ inventory_hostname }} not ready yet"
     delegate_to: localhost
     loop:
       - '902'
@@ -153,7 +153,7 @@
       username: "{{ lookup('env', 'VMWARE_USER') }}"
       password: "{{ lookup('env', 'VMWARE_PASSWORD') }}"
       validate_certs: false
-      esxi_hostname: "{{ ansible_host }}"
+      esxi_hostname: "{{ inventory_hostname }}"
       vsan: ensureObjectAccessibility
       evacuate: true
       timeout: 3600
