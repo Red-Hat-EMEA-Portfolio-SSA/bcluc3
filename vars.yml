@@ -1,10 +1,8 @@
 # for 1b_oneview_apply_spp.yml
 ov_spp_name: "Gen10 Service Pack for ProLiant"
-ov_spp_name: "Gen10 Service Pack for ProLiant version 2023.09.00.00"
 #ov_spp_name: "Service Pack for ProLiant"
 # for 2_update_esxi.yml
 my_vmware_datacenter_name: bcl
 my_vmware_cluster_name: bcl-cluster
 #my_esxi_package: "ESXi-7.0U2a-17867351-standard"
 my_esxi_package: "ESXi-7.0U3n-21930508-standard"
-
