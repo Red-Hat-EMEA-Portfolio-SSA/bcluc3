@@ -128,16 +128,23 @@
       - server_hardwares.powerState is defined 
       - server_hardwares.powerState == "On"
   
+  - name: Debug Host Names
+    debug:
+      msg:
+       - "inventory_hostname: {{ inventory_hostname }}"
+       - "ansible_host: {{ ansible_host }}"
+    when: debug | default(false) | bool
+
   - name: Wait for ESXi to be ready
     ansible.builtin.wait_for:
       port: "{{ inner_item }}"
-      host: "{{ inventory_hostname }}"
+      host: "{{ ansible_host }}"
       # all values in seconds
       delay: 5            # wait 5 sec before 1st try
       connect_timeout: 10   # wait 10 sec with each try
       sleep: 20             # wait 20 sec before trying agin
       timeout: 1500         # wait 30 min alltogether before failing
-      msg: "ESXi {{ inventory_hostname }} not ready yet"
+      msg: "ESXi {{ ansible_host }} not ready yet"
     delegate_to: localhost
     loop:
       - '902'
@@ -153,7 +160,7 @@
       username: "{{ lookup('env', 'VMWARE_USER') }}"
       password: "{{ lookup('env', 'VMWARE_PASSWORD') }}"
       validate_certs: false
-      esxi_hostname: "{{ inventory_hostname }}"
+      esxi_hostname: "{{ ansible_host }}"
       vsan: ensureObjectAccessibility
       evacuate: true
       timeout: 3600
