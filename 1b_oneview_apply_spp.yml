@@ -166,7 +166,8 @@
       timeout: 3600
       state: absent
     delegate_to: localhost
-
+    retries: 10
+  
 #  - name: debug message to reboot the server
 #    ansible.builtin.debug:
 #      msg: "Please run update_esxi or reboot the server manually to apply all firmware updates"
