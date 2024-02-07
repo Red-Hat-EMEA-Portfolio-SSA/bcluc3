@@ -167,6 +167,9 @@
       state: absent
     delegate_to: localhost
     retries: 10
+    delay: 3
+    register: result
+    until: result is succeeded
   
 #  - name: debug message to reboot the server
 #    ansible.builtin.debug:
